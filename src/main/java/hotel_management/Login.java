@@ -1,14 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package hotel_management;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author z004r8tr
+ * @author Akshat
  */
 public class Login extends javax.swing.JFrame {
 
@@ -33,11 +35,11 @@ public class Login extends javax.swing.JFrame {
         emailLabel = new javax.swing.JLabel();
         passwordLabel = new javax.swing.JLabel();
         emailField = new javax.swing.JTextField();
-        passwordField = new javax.swing.JTextField();
         loginBtn = new javax.swing.JButton();
         registerBtn = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         viewPasswordBtn = new javax.swing.JButton();
+        passwordField = new javax.swing.JPasswordField();
         closeBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -51,10 +53,25 @@ public class Login extends javax.swing.JFrame {
         passwordLabel.setText("Password:");
 
         loginBtn.setText("Login");
+        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginBtnActionPerformed(evt);
+            }
+        });
 
         registerBtn.setText("Register");
+        registerBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerBtnActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Forgot Password");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         viewPasswordBtn.setText("T");
 
@@ -72,7 +89,7 @@ public class Login extends javax.swing.JFrame {
                         .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(emailLabel)
                             .addComponent(passwordLabel))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
             .addGroup(signInPanelLayout.createSequentialGroup()
                 .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(signInPanelLayout.createSequentialGroup()
@@ -83,10 +100,13 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(signInPanelLayout.createSequentialGroup()
                         .addGap(121, 121, 121)
                         .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(signInLabel)
                             .addGroup(signInPanelLayout.createSequentialGroup()
-                                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(signInLabel))
+                            .addGroup(signInPanelLayout.createSequentialGroup()
+                                .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(viewPasswordBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(0, 6, Short.MAX_VALUE))
@@ -103,8 +123,8 @@ public class Login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordLabel)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(viewPasswordBtn))
+                    .addComponent(viewPasswordBtn)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginBtn)
@@ -153,6 +173,66 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_closeBtnActionPerformed
 
     /**
+     * This function takes the username and password entered by the user
+     * and uses it to query the database.
+     * If match found, shows login successful and redirects to homepage. 
+     * Else failure message.
+     * @param evt -> Button Click
+     * 
+     * Yet to test.
+     */
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+        Connection con = null;
+        Statement st = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        
+        try{
+            Class.forName(className);
+            con = DriverManager.getConnection(db, username, password);
+            pst = con.prepareStatement("Select * from login where email = ? and password = ?");
+            pst.setString(1, emailField.getText());
+            pst.setString(2, String.valueOf(passwordField.getPassword()));
+            rs = pst.executeQuery();
+            if(rs.next()){
+                JOptionPane.showMessageDialog(this, "Login Successful");
+                TimeUnit.SECONDS.sleep(3);
+ //               new HomePage().setVisible(true);
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Invalid username or password");
+            }
+        }
+        catch(InterruptedException e){
+            System.out.println(e);
+        }
+        catch(ClassNotFoundException e){
+            System.out.println(e);
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_loginBtnActionPerformed
+
+    /**
+     * This function redirects user to register screen.
+     * Commented as the screen is yet to be developed.
+     * @param evt -> ButtonClick
+     */
+    private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+//        new Register().setVisible(true);
+    }//GEN-LAST:event_registerBtnActionPerformed
+
+    /**
+     * This function redirects user to forgot password screen.
+     * Commented as the screen is yet to be developed.
+     * @param evt -> ButtonClick
+     */
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+//        new ForgotPassword().setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -193,7 +273,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel emailLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton loginBtn;
-    private javax.swing.JTextField passwordField;
+    private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JButton registerBtn;
     private javax.swing.JLabel signInLabel;
