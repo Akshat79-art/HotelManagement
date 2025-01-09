@@ -37,7 +37,7 @@ public class Login extends javax.swing.JFrame {
         emailField = new javax.swing.JTextField();
         loginBtn = new javax.swing.JButton();
         registerBtn = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        forgotPasswordBtn = new javax.swing.JButton();
         viewPasswordBtn = new javax.swing.JButton();
         passwordField = new javax.swing.JPasswordField();
         closeBtn = new javax.swing.JButton();
@@ -66,10 +66,10 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Forgot Password");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        forgotPasswordBtn.setText("Forgot Password");
+        forgotPasswordBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                forgotPasswordBtnActionPerformed(evt);
             }
         });
 
@@ -83,7 +83,7 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(signInPanelLayout.createSequentialGroup()
                         .addGap(87, 87, 87)
-                        .addComponent(jButton1))
+                        .addComponent(forgotPasswordBtn))
                     .addGroup(signInPanelLayout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addGroup(signInPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,7 +130,7 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(loginBtn)
                     .addComponent(registerBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(forgotPasswordBtn)
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
@@ -189,7 +189,7 @@ public class Login extends javax.swing.JFrame {
         
         try{
             Class.forName(className);
-            con = DriverManager.getConnection(db, username, password);
+            con = DriverManager.getConnection(db, user, root);
             pst = con.prepareStatement("Select * from login where email = ? and password = ?");
             pst.setString(1, emailField.getText());
             pst.setString(2, String.valueOf(passwordField.getPassword()));
@@ -220,7 +220,7 @@ public class Login extends javax.swing.JFrame {
      * @param evt -> ButtonClick
      */
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-//        new Register().setVisible(true);
+        new Register().setVisible(true);
     }//GEN-LAST:event_registerBtnActionPerformed
 
     /**
@@ -228,9 +228,9 @@ public class Login extends javax.swing.JFrame {
      * Commented as the screen is yet to be developed.
      * @param evt -> ButtonClick
      */
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void forgotPasswordBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forgotPasswordBtnActionPerformed
 //        new ForgotPassword().setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_forgotPasswordBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -271,7 +271,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton closeBtn;
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel emailLabel;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton forgotPasswordBtn;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
