@@ -1,6 +1,7 @@
 package hotel_management;
 
 import javax.swing.JOptionPane;
+import java.util.regex.Pattern;
 
 /**
  * @author Akshat
@@ -12,6 +13,63 @@ public class Register extends javax.swing.JFrame {
      */
     public Register() {
         initComponents();
+    }
+    
+    /**
+     * This function validates the email format entered in by the user.
+     * @param email: Email that user has entered
+     * @return notValidFlag: A boolean value that returns if the email entered is valid or not.
+     */
+    private boolean emailVaildation(String email){
+        
+        boolean notValidFlag = false;
+        Pattern emailPattern = Pattern.compile("[a-zA-Z]+[@][a-zA-Z]+[.][a-zA-Z]+");
+        
+        if(email.equals("")){
+            JOptionPane.showMessageDialog(this, "All field values are mandatory.");
+            emailField.requestFocus();
+            notValidFlag = true;
+        }
+        else if(emailPattern.matcher(email).find()){
+            notValidFlag = false;
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Email not in correct fomat.");
+            emailField.requestFocus();
+            notValidFlag = true;
+        }
+        return notValidFlag;
+    }
+    
+    /**
+     * This function validates the password format entered in by the user.
+     * @param password: Password entered by the user
+     * @return notValidFlag: A boolean value which indicates if the password entered is of correct format.
+     */
+    private boolean passwordVaildation(String password){
+        
+        boolean notValidFlag = false;
+//        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$)$";
+        
+        if(password.equals("")){
+            JOptionPane.showMessageDialog(this, "All field values are mandatory.");
+            passwordField.requestFocus();
+            notValidFlag = true;
+        }
+        else if(password.length() < 6 || password.length() > 15){
+            JOptionPane.showMessageDialog(this, "Password length should be between 6 and 15 characters.");
+            passwordField.requestFocus();
+            notValidFlag = true;
+        }
+//        else if(Pattern.matches(passwordPattern, password)){
+//            notValidFlag = false;
+//        }
+//        else{
+//            JOptionPane.showMessageDialog(this, "Password should be a combination of a number, lowercase letter, uppercase letter, special character and should not have a whitespace.");
+//            passwordField.requestFocus();
+//            notValidFlag = true;
+//        }
+        return notValidFlag;
     }
 
     /**
@@ -34,9 +92,9 @@ public class Register extends javax.swing.JFrame {
         securityQuestionLbel = new javax.swing.JLabel();
         securityQuestionCB = new javax.swing.JComboBox<>();
         answerLabel = new javax.swing.JLabel();
-        answerField = new javax.swing.JPasswordField();
         registerBtn = new javax.swing.JButton();
         signInPage = new javax.swing.JButton();
+        answerField = new javax.swing.JTextField();
         closeBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -45,12 +103,6 @@ public class Register extends javax.swing.JFrame {
         headingLabel.setText("Register Now!");
 
         nameLabel.setText("Name:");
-
-        nameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameFieldActionPerformed(evt);
-            }
-        });
 
         emailLabel.setText("Email:");
 
@@ -64,6 +116,11 @@ public class Register extends javax.swing.JFrame {
 
         registerBtn.setText("Register");
         registerBtn.setMaximumSize(new java.awt.Dimension(80, 22));
+        registerBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerBtnActionPerformed(evt);
+            }
+        });
 
         signInPage.setText("Sign In");
         signInPage.addActionListener(new java.awt.event.ActionListener() {
@@ -92,11 +149,11 @@ public class Register extends javax.swing.JFrame {
                             .addComponent(answerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(72, 72, 72)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(answerField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                             .addComponent(emailField, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                             .addComponent(passwordField)
                             .addComponent(nameField)
-                            .addComponent(securityQuestionCB, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(securityQuestionCB, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(answerField)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(191, 191, 191)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -126,10 +183,10 @@ public class Register extends javax.swing.JFrame {
                     .addComponent(securityQuestionLbel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(securityQuestionCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(answerLabel)
                     .addComponent(answerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(signInPage)
@@ -159,16 +216,16 @@ public class Register extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(closeBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeBtnActionPerformed
-        int exit = JOptionPane.showConfirmDialog(this, "Are you sure", "Exit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int exit = JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(exit == JOptionPane.YES_OPTION){
             System.exit(0);
         }
@@ -178,9 +235,22 @@ public class Register extends javax.swing.JFrame {
         new Login().setVisible(true);
     }//GEN-LAST:event_signInPageActionPerformed
 
-    private void nameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameFieldActionPerformed
+    private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+        
+        String email = emailField.getText();
+        String password = String.valueOf(passwordField.getPassword());
+        
+        if(nameField.getText().equals("")){   
+            JOptionPane.showMessageDialog(this, "All field values are mandatory.");
+            nameField.requestFocus();
+        }
+        else if(emailVaildation(email)){}
+        else if(passwordVaildation(password)){}
+        else if(answerField.getText().equals("")){   
+            JOptionPane.showMessageDialog(this, "All field values are mandatory.");
+            answerField.requestFocus();
+        }
+    }//GEN-LAST:event_registerBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -218,7 +288,7 @@ public class Register extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField answerField;
+    private javax.swing.JTextField answerField;
     private javax.swing.JLabel answerLabel;
     private javax.swing.JButton closeBtn;
     private javax.swing.JTextField emailField;
