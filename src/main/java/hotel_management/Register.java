@@ -1,5 +1,12 @@
 package hotel_management;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import java.util.regex.Pattern;
 
@@ -224,6 +231,10 @@ public class Register extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Closes the application.
+     * @param evt: MouseClick
+     */
     private void closeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeBtnActionPerformed
         int exit = JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(exit == JOptionPane.YES_OPTION){
@@ -231,24 +242,65 @@ public class Register extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_closeBtnActionPerformed
 
+    /**
+     * This button redirects you to the login screen.
+     * @param evt : MouseClick
+     */
     private void signInPageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signInPageActionPerformed
         new Login().setVisible(true);
     }//GEN-LAST:event_signInPageActionPerformed
 
+    /**
+     * This function checks the details entered by the user. 
+     * If all details are valid, and email is not already used by another user,
+     * this function registers the user in the database and redirects to the login screen.
+     * @param evt : MouseClick
+     */
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        
+        String name = nameField.getText();
         String email = emailField.getText();
         String password = String.valueOf(passwordField.getPassword());
+        String answer = answerField.getText();
         
-        if(nameField.getText().equals("")){   
+        if(name.equals("")){   
             JOptionPane.showMessageDialog(this, "All field values are mandatory.");
             nameField.requestFocus();
         }
         else if(emailVaildation(email)){}
         else if(passwordVaildation(password)){}
-        else if(answerField.getText().equals("")){   
+        else if(answer.equals("")){   
             JOptionPane.showMessageDialog(this, "All field values are mandatory.");
             answerField.requestFocus();
+        }
+        else{
+            Connection con = null;
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            try{
+                Class.forName(className);
+                con = DriverManager.getConnection(url, username, password);
+                pst = con.prepareStatement("Select * from login where email = ?");
+                pst.setString(1, email);
+                rs = pst.executeQuery();
+                if(rs.next()){
+                    JOptionPane.showMessageDialog(this, "This email id is already in use.");
+                }
+                else{
+                    pst = con.prepareStatement("Insert into login(name, email, password, sq, ans) values(?,?,?,?,?)");
+                    pst.setString(1, name);
+                    pst.setString(2, email);
+                    pst.setString(3, password);
+                    pst.setString(4, securityQuestionCB.getItemAt(securityQuestionCB.getSelectedIndex()));
+                    pst.setString(5, answer);
+                    pst.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Registration Successful.\nLogin now.");
+                    TimeUnit.SECONDS.sleep(3);
+                    new Login().setVisible(true);
+                }
+            }
+            catch(SQLException | InterruptedException e){
+                System.out.println(e);
+            }
         }
     }//GEN-LAST:event_registerBtnActionPerformed
 
