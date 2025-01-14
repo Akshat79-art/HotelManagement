@@ -5,6 +5,7 @@ import java.sql.Driver;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
@@ -36,6 +37,37 @@ public class ForgotPassword extends javax.swing.JFrame {
             emailField.requestFocus();
             notValidFlag = true;
         }
+        return notValidFlag;
+    }
+    
+     /**
+     * This function validates the password format entered in by the user.
+     * @param password: Password entered by the user
+     * @return notValidFlag: A boolean value which indicates if the password entered is of correct format.
+     */
+    private boolean passwordVaildation(String password){
+        
+        boolean notValidFlag = false;
+//        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$)$";
+        
+        if(password.equals("")){
+            JOptionPane.showMessageDialog(this, "All field values are mandatory.");
+            newPasswordField.requestFocus();
+            notValidFlag = true;
+        }
+        else if(password.length() < 6 || password.length() > 15){
+            JOptionPane.showMessageDialog(this, "Password length should be between 6 and 15 characters.");
+            newPasswordField.requestFocus();
+            notValidFlag = true;
+        }
+//        else if(Pattern.matches(passwordPattern, password)){
+//            notValidFlag = false;
+//        }
+//        else{
+//            JOptionPane.showMessageDialog(this, "Password should be a combination of a number, lowercase letter, uppercase letter, special character and should not have a whitespace.");
+//            passwordField.requestFocus();
+//            notValidFlag = true;
+//        }
         return notValidFlag;
     }
 
@@ -110,6 +142,12 @@ public class ForgotPassword extends javax.swing.JFrame {
         newPasswordField.setEditable(false);
 
         registerBtn.setText("Register");
+        registerBtn.setEnabled(false);
+        registerBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerBtnActionPerformed(evt);
+            }
+        });
 
         loginBtn.setText("Login");
         loginBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -166,10 +204,11 @@ public class ForgotPassword extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(headingLabel)
                 .addGap(18, 18, 18)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(confirmBtn)
-                    .addComponent(emailLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(emailLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(confirmBtn)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(securityQuestionField)
@@ -274,6 +313,7 @@ public class ForgotPassword extends javax.swing.JFrame {
                     securityQuestionField.setText(rs.getString("sq"));
                     answerField.setEditable(true);
                     newPasswordField.setEditable(true);
+                    registerBtn.setEnabled(true);
                 } 
                 else {
                     JOptionPane.showMessageDialog(this, "No accounts found with this email id.");
@@ -284,6 +324,49 @@ public class ForgotPassword extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_confirmBtnActionPerformed
+
+    private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+        String email = emailField.getText();
+        String answer = answerField.getText();
+        String newPassword = String.valueOf(newPasswordField.getPassword());
+        if(emailVaildation(email)){}
+        else if(answer.equals("")){
+            JOptionPane.showMessageDialog(this, "Answer to the question cannot be empty.");
+        }
+        else if(passwordVaildation(newPassword)){}
+        else{
+            Connection con = null;
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            boolean credentialsMatch = false;
+            try {
+                Class.forName(className);
+                con  = Driver.getConnection(db, username, password);
+                pst = con.prepareStatement("Select ans from login were email = ?");
+                pst.setString(1, email);
+                rs = pst.executeQuery();
+                if(rs.next()){
+                    if(answer.equals(rs.getString(1))){
+                        credentialsMatch = true;
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "The given answer does not matches.");
+                    }
+                }
+                if(credentialsMatch){
+                    pst = con.prepareStatement("UPDATE login SET password = ? WHERE email = ?");
+                    pst.setString(1, newPassword);
+                    pst.setString(2, email);
+                    pst.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Registration Successful.\nLogin now.");
+                    TimeUnit.SECONDS.sleep(3);
+                    new Login().setVisible(true);
+                }
+            } catch (SQLException | InterruptedException e) {
+                System.out.println(e);
+            }
+        }
+    }//GEN-LAST:event_registerBtnActionPerformed
 
     /**
      * @param args the command line arguments
