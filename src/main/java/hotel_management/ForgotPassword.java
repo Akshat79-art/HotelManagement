@@ -295,7 +295,12 @@ public class ForgotPassword extends javax.swing.JFrame {
             newPasswordField.setText("");
         }
     }//GEN-LAST:event_resetBtnActionPerformed
-
+    
+    /**
+     * This function validates the email entered by the user.
+     * If correct, it shows the security question and enables the other fields. 
+     * @param evt : MouseClick
+     */
     private void confirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBtnActionPerformed
         String email = emailField.getText();
         if(emailVaildation(email)){}
@@ -325,6 +330,11 @@ public class ForgotPassword extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_confirmBtnActionPerformed
 
+    /**
+     * This function validates the answer to the security question entered by the user.
+     * If valid, it proceeds to update the password with the new password.
+     * @param evt : MouseClick
+     */
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String email = emailField.getText();
         String answer = answerField.getText();
