@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package hotel_management;
 
 /**
- *
- * @author z004r8tr
+ * @author Akshat
  */
 public class Loading2 extends javax.swing.JFrame {
 
@@ -15,6 +10,33 @@ public class Loading2 extends javax.swing.JFrame {
      */
     public Loading2() {
         initComponents();
+        Thread obj = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                for(int i = 0; i <= 100; i++){
+                    try{
+                        progressBar.setValue(i);
+                        Thread.sleep(50);
+                        if(progressBar.getString().equals("100%")){
+                            new Login().setVisible(true);
+                        }
+                        if(progressBar.getString().equals("95%")){
+                            loadingLabel.setText("Launching Application....");
+                        }
+                        if(progressBar.getString().equals("50%")){
+                            loadingLabel.setText("Loading Modules....");
+                        }
+                        if(progressBar.getString().equals("25%")){
+                            loadingLabel.setText("Connecting Database....");
+                        }
+                    }
+                    catch(InterruptedException e){
+                        System.out.println(e);
+                    }
+                }
+            }
+        });
+        obj.start();
     }
 
     /**
@@ -27,22 +49,45 @@ public class Loading2 extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        headingLabel = new javax.swing.JLabel();
+        loadingLabel = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 0));
         setName("Loading2MainFrame"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(650, 350));
         setSize(new java.awt.Dimension(650, 300));
+
+        headingLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        headingLabel.setText("Hotel Management");
+
+        loadingLabel.setText("Loading...");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
+            .addComponent(progressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(163, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(headingLabel)
+                        .addGap(159, 159, 159))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(loadingLabel)
+                        .addGap(49, 49, 49))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 210, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(201, Short.MAX_VALUE)
+                .addComponent(headingLabel)
+                .addGap(10, 10, 10)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(loadingLabel)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -50,16 +95,16 @@ public class Loading2 extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(157, 157, 157)
+                .addGap(112, 112, 112)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -101,6 +146,9 @@ public class Loading2 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel headingLabel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel loadingLabel;
+    private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
 }
